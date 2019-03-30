@@ -40,6 +40,7 @@ def sort_train_labels_knn(Dist, y):
 
     Do sortowania użyj algorytmu mergesort.
     """
+    print(y)
     N1, N2 = Dist.shape[0], Dist.shape[1]
     y_matrix = np.empty([N1, N2], int)  # result matrix
     for n1 in range(N1):
@@ -61,7 +62,26 @@ def p_y_x_knn(y, k):
     :param k: liczba najbliższych sasiadow dla KNN
     :return: macierz prawdopodobieństw p(y|x) dla obiektów z "X" N1xM
     """
-    pass
+    N1, N2 = y.shape[0], y.shape[1]
+    labels = sorted((set(y[0])))  # set of labels
+    prob_matrix = np.empty([N1, len(labels)], float)  # result matrix
+
+    for n1 in range(N1):
+        labels_occurs = dict(zip(labels, np.zeros(len(labels))))  # dictionary - label: occurs_no
+        for i in range(k):  # counting occurs of kNN
+            occurs = labels_occurs[y[n1][i]]
+            occurs += 1
+            labels_occurs.update({y[n1][i]: occurs})
+
+        row_sum = sum(labels_occurs.values())
+        for label in labels_occurs.keys():  # count occurs frequence
+            occurs = labels_occurs[label]
+            mean = occurs / row_sum
+            labels_occurs.update({label: mean})
+
+        prob_matrix[n1] = list(labels_occurs.values())  # convert dict to list
+
+    return prob_matrix
 
 
 def classification_error(p_y_x, y_true):
