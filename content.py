@@ -40,7 +40,15 @@ def sort_train_labels_knn(Dist, y):
 
     Do sortowania użyj algorytmu mergesort.
     """
-    pass
+    N1, N2 = Dist.shape[0], Dist.shape[1]
+    y_matrix = np.empty([N1, N2], int)  # result matrix
+    for n1 in range(N1):
+        dist_and_num = zip(Dist[n1], range(N2))  # list of pairs (Dist[n1], n2)
+        dist_and_num_sorted = sorted(dist_and_num, key=lambda pair: pair[0])  # sorting based of value of Dist[n1]
+        # add the value of y[n2] for each (Dist[n1], n2) pair in sorted array
+        y_matrix[n1] = [y[n2] for _, n2 in dist_and_num_sorted]
+
+    return y_matrix
 
 
 def p_y_x_knn(y, k):
