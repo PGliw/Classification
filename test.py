@@ -83,6 +83,8 @@ class TestClassificationError(TestCase):
         y_true = TEST_DATA['error_fun']['y_true']
         error_val_expected = TEST_DATA['error_fun']['error_val']
 
+        print(error_val_expected * len(y_true))
+
         error_val = classification_error(p_y_x, y_true)
 
         self.assertEqual(np.size(error_val), 1)
