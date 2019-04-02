@@ -93,22 +93,10 @@ def classification_error(p_y_x, y_true):
     :param y_true: zbiór rzeczywistych etykiet klas 1xN
     :return: błąd klasyfikacji
     """
-    #TODO correct this function
     N, M = p_y_x.shape[0], p_y_x.shape[1]
-    #print("\np_y_x", p_y_x)
-    y_predict = np.empty(N, int)
-    for n in range(N):
-        index_pred = 0
-        for m in range(M):
-            if p_y_x[n][m] >= p_y_x[n][index_pred]:
-                index_pred = m
-        y_predict[n] = index_pred+1
-
-    #print("\n\nPredict:\n", y_predict, "\n\nTrue:\n", y_true)
-    #print((y_predict != y_true))
-    err = np.sum(y_predict != y_true)/N  # numpy.sum(arr1 == arr2) sumje na ilu pozycjach są takie same elementy
+    y_predict = [M-np.argmax(np.flip(p))-1 for p in p_y_x]
+    err = sum(y_true != y_predict)/N
     return err
-
 
 def model_selection_knn(X_val, X_train, y_val, y_train, k_values):
     """
