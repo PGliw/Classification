@@ -19,9 +19,7 @@ def hamming_distance(X, X_train):
     """
     N1, N2 = X.shape[0], X_train.shape[0]
     D1, D2 = X.shape[1], X_train.shape[1]
-    print("\nN1, N2 = ", N1, N2, "\nD1, D2 = ", D1, D2)
     dist = np.empty([N1, N2], int)
-    print("dist", dist.shape[0], dist.shape[1])
     for n1 in range(N1):
         for n2 in range(N2):
             dist[n1][n2] = D1 - np.sum(X[n1] == X_train[n2]) #numpy.sum(arr1 == arr2) sumje na ilu pozycjach są takie same elementy
@@ -40,7 +38,6 @@ def sort_train_labels_knn(Dist, y):
 
     Do sortowania użyj algorytmu mergesort.
     """
-    print(y)
     N1, N2 = Dist.shape[0], Dist.shape[1]
     y_matrix = np.empty([N1, N2], int)  # result matrix
     for n1 in range(N1):
@@ -114,7 +111,12 @@ def model_selection_knn(X_val, X_train, y_val, y_train, k_values):
         najniższy, a "errors" - lista wartości błędów dla kolejnych
         "k" z "k_values"
     """
-    pass
+    dist = hamming_distance(X_val, X_train)
+    y_matrix = sort_train_labels_knn(dist, y_train)
+    ks_and_errors = [(k, classification_error(p_y_x_knn(y_matrix, k), y_val)) for k in k_values]
+    best_k, best_error = min(ks_and_errors, key=lambda k_and_err: k_and_err[1])
+    _, errors = zip(*ks_and_errors)
+    return best_error, best_k, errors
 
 
 def estimate_a_priori_nb(y_train):
