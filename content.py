@@ -152,7 +152,18 @@ def estimate_p_x_y_nb(X_train, y_train, a, b):
     :param b: parametr "b" rozkładu Beta
     :return: macierz prawdopodobieństw p(x|y) dla obiektów z "X_train" MxD.
     """
-    pass
+    N, D = X_train.shape[0], X_train.shape[1]
+    labels_set = set(y_train)
+    M = len(labels_set)
+    p_y_x = np.zeros([M, D])
+    for m in range(M):
+        for d in range(D):
+            numerator, denominator = 0, 0
+            for n in range(N):
+                numerator += (1 if X_train[n, d] == 1 and y_train[n] == m else 0)
+                denominator += (1 if y_train[n] == m else 0)
+            p_y_x[m, d] = (numerator + a - 1)/(denominator + a + b - 2)
+    return p_y_x
 
 
 def p_y_x_nb(p_y, p_x_1_y, X):
